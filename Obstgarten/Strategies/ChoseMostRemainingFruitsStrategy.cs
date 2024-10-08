@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Obstgarten.Strategies
+﻿namespace Obstgarten.Strategies
 {
-    public class ChoseMostRemainingFruitsStrategy : IChoseFruitsStrategy<GameParameters.Colors>
+    public class ChoseMostRemainingFruitsStrategy<T> : IChoseFruitsStrategy<T>
+        where T: Enum
     {
-        public IEnumerable<GameParameters.Colors> ChoseFruits(IGame<GameParameters.Colors> game)
+        private const int NumberOdFruits = 2;
+
+
+        public IEnumerable<T> ChoseFruits(IGame<T> game)
         {
-            var availableFruits = game.FruitsLeft.Select(d=>(fruitType: d.Key, count: d.Value)).OrderByDescending(i => i.count).Where(f=>f.count >0).ToList();
-
-            
-            if(availableFruits.First().count == 0) 
-            {
-                throw new Exception("Most abundant fruit has count zero");
-            }
-
-            return availableFruits.Select(f=>f.fruitType);
+            var availableFruits = game.FruitsLeft.Select(d=>(fruitType: d.Key, count: d.Value)).OrderByDescending(i => i.count).Where(f=>f.count >0).Select(f => f.fruitType). ToList();                                  
+            return availableFruits.Take(NumberOdFruits);
         }
     }
 }

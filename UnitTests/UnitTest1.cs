@@ -96,7 +96,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy();
+            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.Colors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
 
@@ -121,7 +121,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy();
+            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.Colors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
             var reference = new List<GameParameters.Colors>

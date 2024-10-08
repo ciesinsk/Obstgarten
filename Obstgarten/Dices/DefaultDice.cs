@@ -23,7 +23,10 @@ namespace Obstgarten.Dices
             {
                 var candidateToss = GetRandomElement();
 
-
+                if (game.RavenColors.Contains(candidateToss) || game.JokerColors.Contains(candidateToss))
+                {
+                    return candidateToss;
+                }
 
                 if (game.FruitsLeft.ContainsKey(candidateToss) && game.FruitsLeft[candidateToss] > 0)
                 {
