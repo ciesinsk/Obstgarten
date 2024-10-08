@@ -124,14 +124,34 @@ namespace UnitTests
             var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.Colors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
-            var reference = new List<GameParameters.Colors>
-            {
-                GameParameters.Colors.Pears, 
-                GameParameters.Colors.Cherries,
-                GameParameters.Colors.Apples
-            };
 
-            Assert.IsTrue( chosenFruits.SequenceEqual(reference) );   
+            Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Cherries));
+            Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Pears));
+            Assert.IsTrue(chosenFruits.Count() == 2);            
+        }
+
+        [TestMethod]
+        public void TestMostAbundantStrategy3()
+        {
+            var game = new Mock<IGame<GameParameters.Colors>>();
+
+            game.Setup(x => x.HasGameEnded()).Returns(false);
+            game.SetupGet(x=> x.FruitsLeft).Returns(
+                new Dictionary<GameParameters.Colors, int>
+                {
+                    { GameParameters.Colors.Apples, 1 },
+                    { GameParameters.Colors.Pears, 0 },
+                    { GameParameters.Colors.Plums, 0 },
+                    { GameParameters.Colors.Cherries, 0 },
+                }
+            );
+
+            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.Colors>();
+
+            var chosenFruits = s.ChoseFruits(game.Object);
+
+            Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Apples));
+            Assert.IsTrue(chosenFruits.Count() == 1);            
         }
     }
 }

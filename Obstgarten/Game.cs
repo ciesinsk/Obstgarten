@@ -1,5 +1,6 @@
 ﻿using Obstgarten.Dices;
 using Obstgarten.Strategies;
+using System.Text;
 
 namespace Obstgarten
 {
@@ -14,7 +15,7 @@ namespace Obstgarten
         /// <summary>
         /// A dictionary that keeps track of the fruits left on the tree
         /// </summary>
-        public IDictionary<T, int> FruitsLeft{ get; init;} 
+        public IDictionary<T, int> FruitsLeft{ get; private set;} 
         
         /// <summary>
         /// A counter that keeps track of the number of Raven tikes laid out yet
@@ -47,17 +48,21 @@ namespace Obstgarten
         public IDice<T> Dice {get; init; } = new DefaultDice<T>();
 
         public IChoseFruitsStrategy<T> ChoosingStrategy {get; init;} = new ChoseMostRemainingFruitsStrategy<T>();
+        public T LastToss { get; private set; }
 
         /// <summary>
-        /// The class that definis the gameplay
+        /// The class that defines the gameplay
         /// </summary>
         public Game() 
         {
             TurnsTaken = 0;
-            RavenPartsLaid = 0;
-           
+            RavenPartsLaid = 0;                      
+        }
+
+        public void InitFruitTree()
+        {
             FruitsLeft = new Dictionary<T, int>();
-            foreach (var fruitType in (T[])  Enum.GetValues(typeof(T)))
+            foreach (var fruitType in ((T[])Enum.GetValues(typeof(T))).Where(f=>JokerColors.Contains(f) == false && RavenColors.Contains(f) == false ))
             {
                 FruitsLeft[fruitType] = NumberOfFruitsPerTree;
             }
@@ -65,22 +70,34 @@ namespace Obstgarten
 
         public void TakeTurn()
         {
-            var nextToss = Dice.NextToss(this);
+            if(HasGameEnded() == true)
+            {
+                return;
+            }
 
-            if (RavenColors.Contains(nextToss))
+            var toss = Dice.NextToss(this);
+
+            TurnsTaken++;
+            LastToss = toss;
+
+            if (RavenColors.Contains(toss))
             {
                 RavenPartsLaid++;
                 return;
             }
 
-            if (JokerColors.Contains(nextToss))
+            if (JokerColors.Contains(toss))
             {
                 var selection = ChoosingStrategy.ChoseFruits(this);
                 foreach(var fruit in selection)
                 {
-
+                    FruitsLeft[fruit] --;
                 }
-            }
+
+                return;
+            }    
+            
+            FruitsLeft[toss]--;
         }
 
         public bool IsGameWon()
@@ -111,6 +128,25 @@ namespace Obstgarten
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine($"Turns taken: {TurnsTaken}");
+            sb.AppendLine($"Dices thrown: {Dice.NumberTosses}");
+            if(TurnsTaken > 0) 
+            {
+                sb.AppendLine($"Last Toss: {LastToss}");
+            }
+            sb.AppendLine($"Raven tiles laid: {RavenPartsLaid}");
+            foreach(var fruit in FruitsLeft.Keys) 
+            {
+                sb.AppendLine($"Number of fruit {fruit} left: {FruitsLeft[fruit]}");
+            }
+
+            return sb.ToString();
         }
     }
 }

@@ -1,15 +1,22 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+﻿using System;
+using System.Runtime.InteropServices.JavaScript;
 
 namespace Obstgarten.Dices
 {
     public class DefaultDice<T> : IDice<T>
         where T : Enum
     {
-        private Random m_r = new Random(0);
+        private Random m_r;
 
-        public DefaultDice()
+        public int NumberTosses {get;private set;} =0;
+        public DefaultDice() 
         {
+            m_r = new Random(0);
+        }
 
+        public DefaultDice(Guid guid) 
+        {
+            m_r = new Random(guid.GetHashCode());
         }
 
         public T NextToss(IGame<T> game)
@@ -22,6 +29,7 @@ namespace Obstgarten.Dices
             while (true)
             {
                 var candidateToss = GetRandomElement();
+                NumberTosses++;
 
                 if (game.RavenColors.Contains(candidateToss) || game.JokerColors.Contains(candidateToss))
                 {
