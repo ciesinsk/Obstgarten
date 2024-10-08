@@ -5,7 +5,7 @@ using System.Text;
 namespace Obstgarten
 {
     public class Game<T>: IGame<T> 
-        where T : Enum
+        where T : struct, Enum 
     {       
         /// <summary>
         /// The number of turns taken so far
@@ -15,7 +15,7 @@ namespace Obstgarten
         /// <summary>
         /// A dictionary that keeps track of the fruits left on the tree
         /// </summary>
-        public IDictionary<T, int> FruitsLeft{ get; private set;} 
+        public IDictionary<T, int> FruitsLeft{ get; private set;} = new Dictionary<T, int>();
         
         /// <summary>
         /// A counter that keeps track of the number of Raven tikes laid out yet
@@ -48,13 +48,15 @@ namespace Obstgarten
         public IDice<T> Dice {get; init; } = new DefaultDice<T>();
 
         public IChoseFruitsStrategy<T> ChoosingStrategy {get; init;} = new ChoseMostRemainingFruitsStrategy<T>();
-        public T LastToss { get; private set; }
+
+        public T LastToss { get; private set; } 
 
         /// <summary>
         /// The class that defines the gameplay
         /// </summary>
         public Game() 
-        {
+        {                
+            LastToss = default;
             TurnsTaken = 0;
             RavenPartsLaid = 0;                      
         }

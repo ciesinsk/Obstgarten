@@ -5,7 +5,7 @@
     {
         public enum Colors
         {
-            Raven, 
+            Raven = 0, 
             Basket,
             Apples, 
             Cherries, 
