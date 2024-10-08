@@ -23,6 +23,8 @@ namespace Obstgarten.Dices
             {
                 var candidateToss = GetRandomElement();
 
+
+
                 if (game.FruitsLeft.ContainsKey(candidateToss) && game.FruitsLeft[candidateToss] > 0)
                 {
                     return candidateToss;

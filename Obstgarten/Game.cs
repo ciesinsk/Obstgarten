@@ -10,16 +10,24 @@
 
         public IDictionary<T, int> FruitsLeft{ get; private set;} = new Dictionary<T, int>();
         
-        public int RavenParts {get; private set;}
+        public int RavenPartsLaid {get; private set;}
+
+        public IEnumerable<T> RavenColors {get; private set;}
+
+        public IEnumerable<T> JokerColors {get; private set;}
+
+        public int NumberOfFruitsPerTree => 10;
+
+        public int NumberOfRavenParts => 9;
 
         public Game() 
         {
             TurnsTaken = 0;
-            RavenParts = 0;
-
+            RavenPartsLaid = 0;
+           
             foreach (var fruitType in (T[])  Enum.GetValues(typeof(T)))
             {
-                FruitsLeft[fruitType] = GameParameters.NumberFruitsItems;
+                FruitsLeft[fruitType] = NumberOfFruitsPerTree;
             }
         }
 
@@ -30,7 +38,7 @@
                 return false;
             }
 
-            if(RavenParts == GameParameters.NumberRavenTiles) 
+            if(RavenPartsLaid == NumberOfRavenParts) 
             {
                 return false;
             }
@@ -40,7 +48,7 @@
 
         public bool HasGameEnded()
         {
-            if(RavenParts == 9)
+            if(RavenPartsLaid == NumberOfRavenParts)
             {
                 return true;
             }
