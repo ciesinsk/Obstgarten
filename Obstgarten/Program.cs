@@ -13,6 +13,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             const int N = 100000;
             var results = new List<int>();
 
+            // play N games of Obstgarten
             foreach(var i in Enumerable.Range(0, N)) 
             { 
                 // play a game of Obstgarten
@@ -28,29 +29,16 @@ namespace MyApp // Note: actual namespace depends on the project name.
                 while(game.HasGameEnded() == false)
                 {
                     game.TakeTurn();
-
-                    //Console.WriteLine(game.ToString());
                 }
-
-                //Console.WriteLine(game.ToString());
 
                 if (game.IsGameWon())
                 {
-                    //Console.WriteLine("The players win.");
                     results.Add(1);
                 }
                 else
                 {
-                    //Console.WriteLine("The raven wins.");
                     results.Add(0);
                 }
-
-                //Console.WriteLine();
-
-                //if(results.Count % 1000 == 0)
-                //{
-                //    Console.WriteLine($"Players won {(double)results.Where(r=>r == 1).Count() / i *100}% of {results.Count} games.");
-                //}
             }
 
             Console.WriteLine($"Players won {(double)results.Where(r=>r == 1).Count() / N *100}% of {results.Count} games.");
