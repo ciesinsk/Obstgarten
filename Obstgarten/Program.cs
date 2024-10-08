@@ -17,7 +17,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             foreach(var i in Enumerable.Range(0, N)) 
             { 
                 // play a game of Obstgarten
-                var game = new Game<GameParameters.Colors>
+                IGame<GameParameters.Colors> game = new Game<GameParameters.Colors>
                 {
                     Dice = new DefaultDice<GameParameters.Colors>(Guid.NewGuid()),
                     RavenColors = new []{GameParameters.Colors.Raven},

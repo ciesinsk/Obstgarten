@@ -35,7 +35,7 @@ namespace Obstgarten
         /// <summary>
         /// The default starting value for the number of each fruit on the tree
         /// </summary>
-        public int NumberOfFruitsPerTree{get; init;} = 10;
+        public int NumberOfFruitsPerFruitType{get; init;} = 10;
 
         /// <summary>
         /// The number of Raven parts there are.
@@ -59,15 +59,21 @@ namespace Obstgarten
             RavenPartsLaid = 0;                      
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public void InitFruitTree()
         {
             FruitsLeft = new Dictionary<T, int>();
             foreach (var fruitType in ((T[])Enum.GetValues(typeof(T))).Where(f=>JokerColors.Contains(f) == false && RavenColors.Contains(f) == false ))
             {
-                FruitsLeft[fruitType] = NumberOfFruitsPerTree;
+                FruitsLeft[fruitType] = NumberOfFruitsPerFruitType;
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public void TakeTurn()
         {
             if(HasGameEnded() == true)
@@ -100,6 +106,9 @@ namespace Obstgarten
             FruitsLeft[toss]--;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool IsGameWon()
         {
             if(HasGameEnded() == false)
@@ -115,6 +124,9 @@ namespace Obstgarten
             return true;
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
         public bool HasGameEnded()
         {
             if(RavenPartsLaid == NumberOfRavenParts)
@@ -130,6 +142,10 @@ namespace Obstgarten
             return false;
         }
 
+        /// <summary>
+        /// Render the current state of the game to a string
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             var sb = new StringBuilder();
