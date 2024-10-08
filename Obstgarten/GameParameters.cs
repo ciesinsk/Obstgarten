@@ -3,8 +3,10 @@
     
     public class GameParameters
     {
-        public enum Fruits
+        public enum Colors
         {
+            Raven, 
+            Chose,
             Apples, 
             Cherries, 
             Pears, 
