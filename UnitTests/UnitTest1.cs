@@ -153,5 +153,30 @@ namespace UnitTests
             Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Apples));
             Assert.IsTrue(chosenFruits.Count() == 1);            
         }
+
+        [TestMethod]
+        public void TestFixedFavStrategy3()
+        {
+            var game = new Mock<IGame<GameParameters.Colors>>();
+
+            game.Setup(x => x.HasGameEnded()).Returns(false);
+            game.SetupGet(x=> x.FruitsLeft).Returns(
+                new Dictionary<GameParameters.Colors, int>
+                {
+                    { GameParameters.Colors.Apples, 1 },
+                    { GameParameters.Colors.Pears, 1 },
+                    { GameParameters.Colors.Plums, 1 },
+                    { GameParameters.Colors.Cherries, 1 },
+                }
+            );
+
+            var s = new Obstgarten.Strategies.FixedFavouritesStrategy<GameParameters.Colors>();
+
+            var chosenFruits = s.ChoseFruits(game.Object);
+
+            Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Apples));
+            Assert.IsTrue(chosenFruits.Contains(GameParameters.Colors.Cherries));
+            Assert.IsTrue(chosenFruits.Count() == 2);            
+        }
     }
 }

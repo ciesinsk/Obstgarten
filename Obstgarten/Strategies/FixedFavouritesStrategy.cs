@@ -13,7 +13,7 @@
         public IEnumerable<T> ChoseFruits(IGame<T> game)
         {
             // just order by _some_ criterium OBDA
-            var availableFruits = game.FruitsLeft.Select(d=>(fruitType: d.Key, count: d.Value)).OrderByDescending(i => i.fruitType.ToString()).Where(f=>f.count >0).Select(f => f.fruitType). ToList();                                  
+            var availableFruits = game.FruitsLeft.Select(d=>(fruitType: d.Key, count: d.Value)).OrderBy(i => i.fruitType.ToString()).Where(f=>f.count >0).Select(f => f.fruitType). ToList();                                  
             return availableFruits.Take(NumberOfFruits);
         }
     }
