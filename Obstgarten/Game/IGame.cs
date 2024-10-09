@@ -19,11 +19,6 @@
         int NumberOfRavenParts { get; }
 
         /// <summary>
-        /// How many Raven parts arealready laid
-        /// </summary>
-        int RavenPartsLaid { get; }
-
-        /// <summary>
         /// What colors on the dice represent the Raven
         /// </summary>
         IEnumerable<T> RavenColors { get; }

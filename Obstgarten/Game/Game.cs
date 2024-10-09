@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Obstgarten.Game
 {
-    public class Game<T> : IGame<T>
+    public class Game<T> : IGame<T>, IGameResult<T>
         where T : struct, Enum
     {
         /// <summary>
@@ -50,6 +50,17 @@ namespace Obstgarten.Game
         public required IChoseFruitsStrategy<T> ChoosingStrategy { get; init; }
 
         public T LastToss { get; private set; }
+
+        public bool PlayersWon {
+            get
+            { 
+                if(HasGameEnded() && IsGameWon())
+                {
+                    return true; 
+                }
+                return false;
+            } 
+        }
 
         /// <summary>
         /// The class that defines the gameplay

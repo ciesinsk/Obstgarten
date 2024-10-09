@@ -1,5 +1,6 @@
 ﻿using Obstgarten.Dices;
 using Obstgarten.Game;
+using Obstgarten.Statistics;
 using Obstgarten.Strategies;
 
 namespace MyApp // Note: actual namespace depends on the project name.
@@ -11,7 +12,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             Console.WriteLine("Obstgarten.");
 
             const int N = 100000;
-            var results = new List<int>();
+            var results = new List<ResultRecord<GameParameters.Colors>>();
 
             // play N games of Obstgarten
             foreach(var i in Enumerable.Range(0, N)) 
@@ -33,17 +34,10 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     game.TakeTurn();
                 }
 
-                if (game.IsGameWon())
-                {
-                    results.Add(1);
-                }
-                else
-                {
-                    results.Add(0);
-                }
+                results.Add(new ResultRecord<GameParameters.Colors>((IGameResult<GameParameters.Colors>)game));
             }
 
-            Console.WriteLine($"Players won {(double)results.Where(r=>r == 1).Count() / N *100}% of {results.Count} games.");
+            Console.WriteLine($"Players won {(double)results.Where(r=>r.PlayersWon).Count() / N *100}% of {results.Count} games.");
         }
     }
 }
