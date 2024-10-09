@@ -3,10 +3,10 @@
 namespace Obstgarten.Strategies
 {
     /// <summary>
-    /// A chosing strategy that choses based on the most favourite fruits regardless of whether there are still many on the tree left or not. 
+    /// A choosing strategy that choses based on the most favourite fruits regardless of whether there are still many on the tree left or not. 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class FixedFavouritesStrategy<T> : IChoseFruitsStrategy<T>
+    public class TwoDifferentFixedFavouritesStrategy<T> : IChoseFruitsStrategy<T>
         where T: Enum
     {
         private const int NumberOfFruits = 2;

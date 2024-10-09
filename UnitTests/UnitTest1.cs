@@ -219,7 +219,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.FixedFavouritesStrategy<GameParameters.DefaultColors>();
+            var s = new Obstgarten.Strategies.TwoDifferentFixedFavouritesStrategy<GameParameters.DefaultColors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
 
