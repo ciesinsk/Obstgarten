@@ -25,12 +25,12 @@ namespace Obstgarten
         /// <summary>
         /// The colors that represent the raven (in the unaltered game this is <see cref="GameParameters.Colors.Raven"/>).
         /// </summary>
-        public IEnumerable<T> RavenColors {get; init;} = Enumerable.Empty<T>();
+        public required IEnumerable<T> RavenColors {get; init;}
 
         /// <summary>
         /// The color where you are allowed to chose two different fruits in one turn. 
         /// </summary>
-        public IEnumerable<T> JokerColors {get; init;} = Enumerable.Empty<T>();
+        public required IEnumerable<T> JokerColors {get; init;}
 
         /// <summary>
         /// The default starting value for the number of each fruit on the tree
@@ -45,9 +45,9 @@ namespace Obstgarten
         /// <summary>
         /// The dice that is used
         /// </summary>
-        public IDice<T> Dice {get; init; } = new DefaultDice<T>();
+        public required IDice<T> Dice {get; init; }
 
-        public IChoseFruitsStrategy<T> ChoosingStrategy {get; init;} = new ChoseMostRemainingFruitsStrategy<T>();
+        public required IChoseFruitsStrategy<T> ChoosingStrategy {get; init;}
 
         public T LastToss { get; private set; } 
 

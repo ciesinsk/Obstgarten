@@ -1,6 +1,6 @@
 ﻿using Obstgarten;
 using Obstgarten.Dices;
-using System;
+using Obstgarten.Strategies;
 
 namespace MyApp // Note: actual namespace depends on the project name.
 {
@@ -20,8 +20,10 @@ namespace MyApp // Note: actual namespace depends on the project name.
                 IGame<GameParameters.Colors> game = new Game<GameParameters.Colors>
                 {
                     Dice = new DefaultDice<GameParameters.Colors>(Guid.NewGuid()),
-                    RavenColors = new []{GameParameters.Colors.Raven},
-                    JokerColors = new []{GameParameters.Colors.Basket}
+                    //ChoosingStrategy = new FixedFavouritesStrategy<GameParameters.Colors>(),
+                    ChoosingStrategy = new ChoseMostRemainingFruitsStrategy<GameParameters.Colors>(),
+                    RavenColors = [GameParameters.Colors.Raven],
+                    JokerColors = [GameParameters.Colors.Basket]
                 };
 
                 game.InitFruitTree();

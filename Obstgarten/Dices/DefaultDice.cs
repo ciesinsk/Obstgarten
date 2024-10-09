@@ -1,7 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices.JavaScript;
-
-namespace Obstgarten.Dices
+﻿namespace Obstgarten.Dices
 {
     public class DefaultDice<T> : IDice<T>
         where T : Enum
