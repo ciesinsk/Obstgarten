@@ -34,7 +34,15 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     game.TakeTurn();
                 }
 
-                results.Add(new ResultRecord<GameParameters.Colors>((IGameResult<GameParameters.Colors>)game));
+                if(game is IGameResult<GameParameters.Colors> gameResult) 
+                {
+                    results.Add(new ResultRecord<GameParameters.Colors>(gameResult));
+                }
+            }
+
+            if(results.Count == 0) 
+            {
+                Console.WriteLine("no results");
             }
 
             Console.WriteLine($"Players won {(double)results.Where(r=>r.PlayersWon).Count() / N *100}% of {results.Count} games.");
