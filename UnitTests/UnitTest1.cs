@@ -96,7 +96,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
+            var s = new Obstgarten.Strategies.ChoseTwoODifferentfMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
 
@@ -121,7 +121,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
+            var s = new Obstgarten.Strategies.ChoseTwoODifferentfMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
 
@@ -146,7 +146,7 @@ namespace UnitTests
                 }
             );
 
-            var s = new Obstgarten.Strategies.ChoseMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
+            var s = new Obstgarten.Strategies.ChoseTwoODifferentfMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
 
             var chosenFruits = s.ChoseFruits(game.Object);
 
@@ -155,7 +155,56 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestFixedFavStrategy3()
+        public void TestMostAbundantStrategy4()
+        {
+            var game = new Mock<IGame<GameParameters.DefaultColors>>();
+
+            game.Setup(x => x.HasGameEnded()).Returns(false);
+            game.SetupGet(x=> x.FruitsLeft).Returns(
+                new Dictionary<GameParameters.DefaultColors, int>
+                {
+                    { GameParameters.DefaultColors.Apples, 1 },
+                    { GameParameters.DefaultColors.Pears, 4 },
+                    { GameParameters.DefaultColors.Plums, 0 },
+                    { GameParameters.DefaultColors.Cherries, 2 },
+                }
+            );
+
+            var s = new Obstgarten.Strategies.ChoseOfMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
+
+            var chosenFruits = s.ChoseFruits(game.Object).ToArray();
+            
+            Assert.IsTrue(chosenFruits[0] == GameParameters.DefaultColors.Pears);
+            Assert.IsTrue(chosenFruits[1] == GameParameters.DefaultColors.Pears);
+            Assert.IsTrue(chosenFruits.Length == 2);            
+        }
+
+                [TestMethod]
+        public void TestMostAbundantStrategy5()
+        {
+            var game = new Mock<IGame<GameParameters.DefaultColors>>();
+
+            game.Setup(x => x.HasGameEnded()).Returns(false);
+            game.SetupGet(x=> x.FruitsLeft).Returns(
+                new Dictionary<GameParameters.DefaultColors, int>
+                {
+                    { GameParameters.DefaultColors.Apples, 1 },
+                    { GameParameters.DefaultColors.Pears, 0 },
+                    { GameParameters.DefaultColors.Plums, 0 },
+                    { GameParameters.DefaultColors.Cherries, 0 },
+                }
+            );
+
+            var s = new Obstgarten.Strategies.ChoseOfMostRemainingFruitsStrategy<GameParameters.DefaultColors>();
+
+            var chosenFruits = s.ChoseFruits(game.Object).ToArray();
+            
+            Assert.IsTrue(chosenFruits[0] == GameParameters.DefaultColors.Apples);            
+            Assert.IsTrue(chosenFruits.Length == 1);            
+        }
+
+        [TestMethod]
+        public void TestFixedFavStrategy()
         {
             var game = new Mock<IGame<GameParameters.DefaultColors>>();
 

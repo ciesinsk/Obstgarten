@@ -23,7 +23,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
                 {
                     Dice = new DefaultDice<GameParameters.DefaultColors>(Guid.NewGuid()),
                     //ChoosingStrategy = new FixedFavouritesStrategy<GameParameters.Colors>(),
-                    ChoosingStrategy = new ChoseMostRemainingFruitsStrategy<GameParameters.DefaultColors>(),
+                    ChoosingStrategy = new ChoseOfMostRemainingFruitsStrategy<GameParameters.DefaultColors>(),
                     RavenColors = [GameParameters.DefaultColors.Raven],
                     JokerColors = [GameParameters.DefaultColors.Basket],
                     NumberOfRavenParts = 9
