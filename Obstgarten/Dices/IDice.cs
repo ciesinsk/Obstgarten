@@ -1,4 +1,6 @@
-﻿namespace Obstgarten.Dices
+﻿using Obstgarten.Game;
+
+namespace Obstgarten.Dices
 {
     public interface IDice<T>
         where T : Enum

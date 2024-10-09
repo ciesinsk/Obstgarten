@@ -1,5 +1,5 @@
-﻿using Obstgarten;
-using Obstgarten.Dices;
+﻿using Obstgarten.Dices;
+using Obstgarten.Game;
 using Obstgarten.Strategies;
 
 namespace MyApp // Note: actual namespace depends on the project name.

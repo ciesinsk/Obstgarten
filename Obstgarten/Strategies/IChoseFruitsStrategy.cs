@@ -1,4 +1,6 @@
-﻿namespace Obstgarten.Strategies
+﻿using Obstgarten.Game;
+
+namespace Obstgarten.Strategies
 {
     public interface IChoseFruitsStrategy<T>
         where T : Enum

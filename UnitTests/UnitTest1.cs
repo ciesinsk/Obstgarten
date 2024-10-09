@@ -1,5 +1,5 @@
 using Moq;
-using Obstgarten;
+using Obstgarten.Game;
 
 namespace UnitTests
 {

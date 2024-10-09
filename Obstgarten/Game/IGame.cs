@@ -1,4 +1,4 @@
-﻿namespace Obstgarten
+﻿namespace Obstgarten.Game
 {
     public interface IGame<T>
         where T : Enum
@@ -6,17 +6,17 @@
         /// <summary>
         /// The number of fruits lft on the tree for each fruit type
         /// </summary>
-        public IDictionary<T, int> FruitsLeft {get;}
-        
+        public IDictionary<T, int> FruitsLeft { get; }
+
         /// <summary>
         /// Specifies the number of fruits per fruit type initially on the tree
         /// </summary>
-        int NumberOfFruitsPerFruitType {get;}
+        int NumberOfFruitsPerFruitType { get; }
 
         /// <summary>
         /// Specifies how many tiles make the Raven complete
         /// </summary>
-        int NumberOfRavenParts {get;}
+        int NumberOfRavenParts { get; }
 
         /// <summary>
         /// How many Raven parts arealready laid

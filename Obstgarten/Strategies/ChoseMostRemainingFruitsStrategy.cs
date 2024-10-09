@@ -1,4 +1,6 @@
-﻿namespace Obstgarten.Strategies
+﻿using Obstgarten.Game;
+
+namespace Obstgarten.Strategies
 {
     /// <summary>
     /// A chosing strategy that choses two of the most abundant fruits.
