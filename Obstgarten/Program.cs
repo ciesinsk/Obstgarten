@@ -25,7 +25,8 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     //ChoosingStrategy = new FixedFavouritesStrategy<GameParameters.Colors>(),
                     ChoosingStrategy = new ChoseMostRemainingFruitsStrategy<GameParameters.DefaultColors>(),
                     RavenColors = [GameParameters.DefaultColors.Raven],
-                    JokerColors = [GameParameters.DefaultColors.Basket]
+                    JokerColors = [GameParameters.DefaultColors.Basket],
+                    NumberOfRavenParts = 9
                 };
 
                 game.InitFruitTree();
