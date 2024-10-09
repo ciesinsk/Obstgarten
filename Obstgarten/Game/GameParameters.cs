@@ -3,14 +3,27 @@
 
     public class GameParameters
     {
-        public enum Colors
+        //public enum DefaultColors
+        //{
+        //    Raven = 0,
+        //    Basket,
+        //    Apples,
+        //    Cherries,
+        //    Pears,
+        //    Plums
+        //}
+
+        public enum DefaultColors
         {
             Raven = 0,
             Basket,
             Apples,
             Cherries,
             Pears,
-            Plums
+            Plums,
+            Strawberries, 
+            Nuts, 
+            Berries
         }
     }
 }

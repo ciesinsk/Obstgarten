@@ -23,7 +23,7 @@ namespace Obstgarten.Game
         public int RavenPartsLaid { get; private set; }
 
         /// <summary>
-        /// The colors that represent the raven (in the unaltered game this is <see cref="GameParameters.Colors.Raven"/>).
+        /// The colors that represent the raven (in the unaltered game this is <see cref="GameParameters.DefaultColors.Raven"/>).
         /// </summary>
         public required IEnumerable<T> RavenColors { get; init; }
 
