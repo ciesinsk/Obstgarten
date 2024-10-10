@@ -13,7 +13,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
         {
             Console.WriteLine("Obstgarten.");
             
-            const int N = 100000;
+            const int N = 2 << 15;
             var results = new ConcurrentBag<ResultRecord<GameParameters.DefaultColors>>();
 
             var parDegree = Environment.ProcessorCount;
