@@ -2,6 +2,7 @@
 using Obstgarten.Game;
 using Obstgarten.Statistics;
 using Obstgarten.Strategies;
+using System.Collections.Concurrent;
 
 
 namespace MyApp // Note: actual namespace depends on the project name.
@@ -13,11 +14,15 @@ namespace MyApp // Note: actual namespace depends on the project name.
             Console.WriteLine("Obstgarten.");
             
             const int N = 100000;
-            var results = new List<ResultRecord<GameParameters.DefaultColors>>();
+            var results = new ConcurrentBag<ResultRecord<GameParameters.DefaultColors>>();
 
-            // play N games of Obstgarten
-            foreach(var i in Enumerable.Range(0, N)) 
-            { 
+            var parDegree = Environment.ProcessorCount;
+            var parOpt = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+
+            Console.WriteLine($"Simulating {N} games, degree of parallelism is {parDegree}.");
+
+            Parallel.For(0, N, result => 
+            {
                 // play a game of Obstgarten
                 IGame<GameParameters.DefaultColors> game = new Game<GameParameters.DefaultColors>
                 {
@@ -31,16 +36,16 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
                 game.InitFruitTree();
 
-                while(game.HasGameEnded() == false)
+                while (game.HasGameEnded() == false)
                 {
                     game.TakeTurn();
                 }
 
-                if(game is IGameResult<GameParameters.DefaultColors> gameResult) 
+                if (game is IGameResult<GameParameters.DefaultColors> gameResult)
                 {
                     results.Add(new ResultRecord<GameParameters.DefaultColors>(gameResult));
                 }
-            }
+            });
 
             if(results.Count == 0) 
             {
