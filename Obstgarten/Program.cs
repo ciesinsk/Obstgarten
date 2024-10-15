@@ -21,7 +21,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
             Console.WriteLine($"Simulating {N} games, degree of parallelism is {parDegree}.");
 
-            Parallel.For(0, N, result => 
+            Parallel.For(0, N, parOpt, result => 
             {
                 // play a game of Obstgarten
                 IGame<GameParameters.DefaultColors> game = new Game<GameParameters.DefaultColors>
