@@ -18,17 +18,17 @@ namespace Obstgarten.Strategies
 
             for (var i = 0; i < NumberOfFruits; i++)
             {
-                var fruit = fruitsLeft
+                var available = fruitsLeft
                     .Where(f => f.Value > 0)
                     .OrderBy(f => f.Value)
-                    .Select(f => f.Key)
-                    .FirstOrDefault();
+                    .ToList();
 
-                if (EqualityComparer<T>.Default.Equals(fruit, default!))
+                if (available.Count == 0)
                 {
                     break;
                 }
 
+                var fruit = available[0].Key;
                 result.Add(fruit);
                 fruitsLeft[fruit]--;
             }
