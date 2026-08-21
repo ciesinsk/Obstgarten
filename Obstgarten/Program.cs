@@ -60,8 +60,9 @@ namespace MyApp
                        PercentageDecimalPlaces));
 
             Console.WriteLine();
+            var displayedWinRate = (interval.Estimate * 100.0).ToString($"F{PercentageDecimalPlaces}");
             Console.WriteLine(
-                $"Players won {interval.Estimate * 100:F{PercentageDecimalPlaces}}% of {gamesPlayed:N0} games.");
+                $"Players won {displayedWinRate}% of {gamesPlayed:N0} games.");
             Console.WriteLine(
                 $"With {ConfidenceLevel:P0} confidence, the true win probability lies between " +
                 $"{interval.Lower * 100:F4}% and {interval.Upper * 100:F4}%, and every value in that interval " +
