@@ -15,58 +15,60 @@ namespace MyApp
         {
             Console.WriteLine("Obstgarten.");
 
+            var absoluteError = SequentialProportionEstimator
+                .PrecisionForPercentageDecimalPlaces(PercentageDecimalPlaces);
+            var requiredGames = SequentialProportionEstimator
+                .GetRequiredTrials(absoluteError, ConfidenceLevel);
+
             long gamesPlayed = 0;
             long gamesWon = 0;
-            long inspectionNumber = 0;
 
             var parDegree = Environment.ProcessorCount;
             var parOpt = new ParallelOptions { MaxDegreeOfParallelism = parDegree };
 
             Console.WriteLine(
-                $"Simulating until the win percentage is stable to {PercentageDecimalPlaces} decimal place(s) " +
-                $"with {ConfidenceLevel:P0} confidence. Degree of parallelism is {parDegree}.");
+                $"Target: +/-{absoluteError * 100:F{PercentageDecimalPlaces + 1}} percentage points " +
+                $"with {ConfidenceLevel:P0} confidence.");
+            Console.WriteLine(
+                $"Required games (Hoeffding bound): {requiredGames:N0}. " +
+                $"Degree of parallelism is {parDegree}.");
 
-            SequentialProportionEstimator.ConfidenceInterval interval;
-
-            do
+            while (gamesPlayed < requiredGames)
             {
+                var currentBatchSize = (int)Math.Min(BatchSize, requiredGames - gamesPlayed);
                 long winsInBatch = 0;
 
                 Parallel.For(
                     0,
-                    BatchSize,
+                    currentBatchSize,
                     parOpt,
                     () => 0L,
                     (i, state, localWins) => localWins + (PlayGame() ? 1 : 0),
                     localWins => Interlocked.Add(ref winsInBatch, localWins));
 
-                gamesPlayed += BatchSize;
+                gamesPlayed += currentBatchSize;
                 gamesWon += winsInBatch;
-                inspectionNumber++;
 
-                interval = SequentialProportionEstimator.GetConfidenceInterval(
-                    gamesWon,
-                    gamesPlayed,
-                    inspectionNumber,
-                    ConfidenceLevel);
-
+                var estimate = (double)gamesWon / gamesPlayed;
                 Console.Write(
-                    $"\rGames: {gamesPlayed:N0}, " +
-                    $"win rate: {interval.Estimate * 100:F3}%, " +
-                    $"confidence sequence: [{interval.Lower * 100:F3}%, {interval.Upper * 100:F3}%]");
+                    $"\rGames: {gamesPlayed:N0}/{requiredGames:N0}, " +
+                    $"win rate: {estimate * 100:F3}%");
             }
-            while (!SequentialProportionEstimator.IsRoundedPercentageStable(
-                       interval,
-                       PercentageDecimalPlaces));
 
             Console.WriteLine();
+
+            var interval = SequentialProportionEstimator.GetConfidenceInterval(
+                gamesWon,
+                gamesPlayed,
+                ConfidenceLevel);
+
             var displayedWinRate = (interval.Estimate * 100.0).ToString($"F{PercentageDecimalPlaces}");
             Console.WriteLine(
                 $"Players won {displayedWinRate}% of {gamesPlayed:N0} games.");
             Console.WriteLine(
-                $"With {ConfidenceLevel:P0} confidence, the true win probability lies between " +
-                $"{interval.Lower * 100:F4}% and {interval.Upper * 100:F4}%, and every value in that interval " +
-                $"rounds to the same {PercentageDecimalPlaces}-decimal-place percentage.");
+                $"With {ConfidenceLevel:P0} confidence, the absolute estimation error is at most " +
+                $"{absoluteError * 100:F{PercentageDecimalPlaces + 1}} percentage points " +
+                $"(Hoeffding interval: {interval.Lower * 100:F4}% to {interval.Upper * 100:F4}%).");
         }
 
         private static bool PlayGame()
