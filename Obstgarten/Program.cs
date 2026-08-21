@@ -2,57 +2,91 @@
 using Obstgarten.Game;
 using Obstgarten.Statistics;
 using Obstgarten.Strategies;
-using System.Collections.Concurrent;
 
-
-namespace MyApp // Note: actual namespace depends on the project name.
+namespace MyApp
 {
     internal class Program
     {
+        private const double ConfidenceLevel = 0.90;
+        private const int PercentageDecimalPlaces = 1;
+        private const int BatchSize = 4096;
+
         static void Main(string[] args)
         {
             Console.WriteLine("Obstgarten.");
-            
-            const int N = 2 << 15;
-            var results = new ConcurrentBag<ResultRecord<GameParameters.DefaultColors>>();
+
+            long gamesPlayed = 0;
+            long gamesWon = 0;
+            long inspectionNumber = 0;
 
             var parDegree = Environment.ProcessorCount;
-            var parOpt = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+            var parOpt = new ParallelOptions { MaxDegreeOfParallelism = parDegree };
 
-            Console.WriteLine($"Simulating {N} games, degree of parallelism is {parDegree}.");
+            Console.WriteLine(
+                $"Simulating until the win percentage is stable to {PercentageDecimalPlaces} decimal place(s) " +
+                $"with {ConfidenceLevel:P0} confidence. Degree of parallelism is {parDegree}.");
 
-            Parallel.For(0, N, parOpt, result => 
+            SequentialProportionEstimator.ConfidenceInterval interval;
+
+            do
             {
-                // play a game of Obstgarten
-                IGame<GameParameters.DefaultColors> game = new Game<GameParameters.DefaultColors>
-                {
-                    Dice = new DefaultDice<GameParameters.DefaultColors>(Guid.NewGuid()),
-                    //ChoosingStrategy = new FixedFavouritesStrategy<GameParameters.Colors>(),
-                    ChoosingStrategy = new ChoseOfMostRemainingFruitsStrategy<GameParameters.DefaultColors>(),
-                    RavenColors = [GameParameters.DefaultColors.Raven],
-                    JokerColors = [GameParameters.DefaultColors.Basket],
-                    NumberOfRavenParts = 9
-                };
+                long winsInBatch = 0;
 
-                game.InitFruitTree();
+                Parallel.For(
+                    0,
+                    BatchSize,
+                    parOpt,
+                    () => 0L,
+                    (i, state, localWins) => localWins + (PlayGame() ? 1 : 0),
+                    localWins => Interlocked.Add(ref winsInBatch, localWins));
 
-                while (game.HasGameEnded() == false)
-                {
-                    game.TakeTurn();
-                }
+                gamesPlayed += BatchSize;
+                gamesWon += winsInBatch;
+                inspectionNumber++;
 
-                if (game is IGameResult<GameParameters.DefaultColors> gameResult)
-                {
-                    results.Add(new ResultRecord<GameParameters.DefaultColors>(gameResult));
-                }
-            });
+                interval = SequentialProportionEstimator.GetConfidenceInterval(
+                    gamesWon,
+                    gamesPlayed,
+                    inspectionNumber,
+                    ConfidenceLevel);
 
-            if(results.Count == 0) 
+                Console.Write(
+                    $"\rGames: {gamesPlayed:N0}, " +
+                    $"win rate: {interval.Estimate * 100:F3}%, " +
+                    $"confidence sequence: [{interval.Lower * 100:F3}%, {interval.Upper * 100:F3}%]");
+            }
+            while (!SequentialProportionEstimator.IsRoundedPercentageStable(
+                       interval,
+                       PercentageDecimalPlaces));
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"Players won {interval.Estimate * 100:F{PercentageDecimalPlaces}}% of {gamesPlayed:N0} games.");
+            Console.WriteLine(
+                $"With {ConfidenceLevel:P0} confidence, the true win probability lies between " +
+                $"{interval.Lower * 100:F4}% and {interval.Upper * 100:F4}%, and every value in that interval " +
+                $"rounds to the same {PercentageDecimalPlaces}-decimal-place percentage.");
+        }
+
+        private static bool PlayGame()
+        {
+            IGame<GameParameters.DefaultColors> game = new Game<GameParameters.DefaultColors>
             {
-                Console.WriteLine("no results");
+                Dice = new DefaultDice<GameParameters.DefaultColors>(Guid.NewGuid()),
+                ChoosingStrategy = new ChoseOfMostRemainingFruitsStrategy<GameParameters.DefaultColors>(),
+                RavenColors = [GameParameters.DefaultColors.Raven],
+                JokerColors = [GameParameters.DefaultColors.Basket],
+                NumberOfRavenParts = 9
+            };
+
+            game.InitFruitTree();
+
+            while (!game.HasGameEnded())
+            {
+                game.TakeTurn();
             }
 
-            Console.WriteLine($"Players won {(double)results.Where(r=>r.PlayersWon).Count() / N *100}% of {results.Count} games.");
+            return game is IGameResult<GameParameters.DefaultColors> gameResult && gameResult.PlayersWon;
         }
     }
 }
